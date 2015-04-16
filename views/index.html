@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forum - Home</title>
+</head>
+<body>
+  <h3>Forum</h3>
+  <p><a href = "/users/create">Create account</a></p>
+  {{#allPosts}}
+    <p>{{topic}} - posted by {{username}} / upvotes - {{votes}}</p>
+  {{/allPosts}}
+</body>
+</html>

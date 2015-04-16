@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User accounts</title>
+  <style>
+    p {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  {{#allUsers}}
+  <p>
+    username: {{username}} / email: {{email}} / 
+    <a href = "/users/{{user_id}}">edit</a>
+  </p>
+  {{/allUsers}}
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User Information</title>
+</head>
+<body>
+  <p>
+  <h3>Update User Info For {{username}}</h3>
+  <form method = "POST" action = "/users/{{user_id}}?_method=PUT">
+    <input type = "text" name = "username" value = "{{username}}">
+    <input type = "text" name = "email" value = "{{email}}">
+    <input type = "hidden" name = "user_id" value = "{{user_id}}">
+    <button type = "submit">Update</button>
+  </form>
+  </p>
+  <form method="POST" action="/users/{{user_id}}?_method=DELETE">
+    <button type="submit">Delete</button>
+  </form>
+</body>
+</html>
