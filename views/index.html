@@ -6,9 +6,12 @@
 </head>
 <body>
   <h3>Forum</h3>
-  <p><a href = "/users/create">Create account</a></p>
+  <p>
+    <a href = "/users/new">Create account</a><br>
+    <a href = "/topics/new">New Topic</a>
+  </p>
   {{#allPosts}}
-    <p>{{topic}} - posted by {{username}} / upvotes - {{votes}}</p>
+    <p><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} / upvotes - {{votes}}</p>
   {{/allPosts}}
 </body>
 </html>

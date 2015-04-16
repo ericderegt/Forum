@@ -6,9 +6,9 @@
 </head>
 <body>
   {{topic}}<br>
-  Posted by {{topicUser}}<br>
+  Posted by {{topicUser}} / {{upvotes}} upvotes<br>
   {{#comments}}
-  <p>{{comment}}<br>Posted by{{commentUser}}</p>
+  <p>{{comment}}<br>Posted by {{username}}</p>
   {{/comments}}
 </body>
 </html>
