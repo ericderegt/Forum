@@ -12,8 +12,8 @@
 <body>
   {{#allUsers}}
   <p>
-    username: {{username}} / email: {{email}} / 
-    <a href = "/users/{{user_id}}">edit</a>
+    username: <a href = "/users/{{user_id}}">{{username}}</a> / email: {{email}} / 
+    <a href = "/users/{{user_id}}/edit">edit</a>
   </p>
   {{/allUsers}}
 </body>

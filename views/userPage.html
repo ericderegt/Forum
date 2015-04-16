@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{username}}</title>
+</head>
+<body>
+  <h3>{{username}}</h3>
+  <h4>topics created by {{username}}</h4>
+  <p>
+    {{#posts}}
+      {{topic}} / {{votes}}
+    {{/posts}}
+  </p>
+  <h4>comments created by {{username}}</h4>
+  <p>
+    {{#comments}}
+      {{comment}} on {{topic}}
+    {{/comments}}
+  </p>
+</body>
+</html>
