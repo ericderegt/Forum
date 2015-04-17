@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Topic</title>
+</head>
+<body>
+  <h3>{{topic}} - Update</h3>
+  <p>
+  <form method = "POST" action = "/topics/{{topic_id}}?_method=PUT">
+    <label>
+    <input type = "text" name = "topic" value = "{{topic}}">
+    - Posted by {{topicUser}}
+    </label>
+    <button type = "submit">Update</button>
+  </form>
+  <br>
+  <form method="POST" action="/topics/{{topic_id}}?_method=DELETE">
+    <button type="submit">Delete</button>
+  </form>
+  </p>
+  {{#comments}}
+  <h3>Edit/Delete Comments<h3>
+  <p>
+  <form method = "POST" action = "/comments/{{comment_id}}?_method=PUT">
+    <label>
+    <input type = "text" name = "comment" value = "{{comment}}">
+    - Posted by {{username}}
+    </label>
+    <button type = "submit">Update</button>
+  </form>
+  <br>
+  <form method="POST" action="/comments/{{comment_id}}?_method=DELETE">
+    <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
+    <button type="submit">Delete</button>
+  </form>
+  {{/comments}}
+</body>
+</html>

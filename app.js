@@ -77,7 +77,6 @@ app.get('/users/:user_id/edit', function(req, res) {
   var id = req.params.user_id;
   db.all("SELECT * FROM users WHERE user_id = '" + id + "';", {}, function(err, userInfo) {
     fs.readFile('./views/editUser.html', 'utf8', function(error, html) {
-      console.log(userInfo[0]);
       var rendered = Mustache.render(html, userInfo[0]);
       res.send(rendered);
     });
@@ -127,13 +126,13 @@ app.post('/topics', function(req,res){
 // individual topic page
 app.get('/topics/:topic_id', function(req, res) {
   var topic = req.params.topic_id;
-  console.log(topic);
-  db.all("SELECT topic, votes, username FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
+  db.all("SELECT topic, votes, username, topic_id FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
     db.all("SELECT comment, topic, username FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
       fs.readFile('./views/topicPage.html', 'utf8', function(err, html) {
         var rendered = Mustache.render(html, {
           topic: topicInfo[0].topic,
           topicUser: topicInfo[0].username,
+          topic_id: topicInfo[0].topic_id,
           upvotes: topicInfo[0].votes,
           comments: commentsInfo
         });
@@ -141,6 +140,64 @@ app.get('/topics/:topic_id', function(req, res) {
       });
     });
   });
+});
+
+// edit topic page
+app.get('/topics/:topic_id/edit', function(req,res){
+  var topic = req.params.topic_id;
+  db.all("SELECT topic, votes, username, topic_id FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
+    db.all("SELECT comment, topic, username, comment_id FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
+      fs.readFile('./views/editTopic.html', 'utf8', function(err, html) {
+        var rendered = Mustache.render(html, {
+          topic: topicInfo[0].topic,
+          topicUser: topicInfo[0].username,
+          topic_id: topicInfo[0].topic_id,
+          comments: commentsInfo
+        });
+        res.send(rendered);
+      });
+    });
+  });
+});
+
+// edit topic put route
+app.put('/topics/:topic_id', function(req, res) {
+  var id = req.params.topic_id;
+  var topicInfo = req.body;
+  db.run("UPDATE topics SET topic = '" + topicInfo.topic + "' WHERE topic_id = " + id + ";");
+  res.redirect('/topics/' + id + '/edit');
+});
+
+// delete topic route. **this also deletes all associated comments**.
+app.delete('/topics/:topic_id', function(req, res) {
+  var id = req.params.topic_id;
+  db.run("DELETE FROM topics WHERE topic_id = " + id + ";");
+  db.run("DELETE FROM comments WHERE topic_id = " + id + ";");
+  res.redirect('/');
+});
+
+// comment post route
+app.post('/comments', function(req,res){
+  db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
+    var id = users[0].user_id;
+    db.run("INSERT INTO comments (comment, user_id, topic_id) VALUES ('" + req.body.comment + "', " + id + " , " + req.body.topic_id + ");");
+    res.redirect('/topics/' + req.body.topic_id);
+  });
+});
+
+// edit comment put route
+app.put('/comments/:comment_id', function(req, res) {
+  var id = req.params.comment_id;
+  var commentInfo = req.body;
+  db.run("UPDATE comments SET comment = '" + commentInfo.comment + "' WHERE comment_id = " + id + ";");
+  res.redirect('/topics/' + id + '/edit');
+});
+
+// delete comment route
+app.delete('/comments/:comment_id', function(req, res) {
+  var id = req.params.comment_id;
+  db.run("DELETE FROM comments WHERE comment_id = " + id + ";");
+  res.redirect('/topics/' + req.body.topic_id);
 });
 
 

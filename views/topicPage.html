@@ -7,8 +7,24 @@
 <body>
   {{topic}}<br>
   Posted by {{topicUser}} / {{upvotes}} upvotes<br>
+<!-- comments loop  -->
   {{#comments}}
   <p>{{comment}}<br>Posted by {{username}}</p>
   {{/comments}}
+<!-- add a comment  -->
+  <p>
+    <h3>Add a comment</h3>
+    <form method = "POST" action = "/comments">
+    <label>
+      <input type = "text" name = "comment"/> Enter comment
+    </label>
+    <label>
+      <input type = "text" name = "username"/> Username
+    </label>
+      <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
+    <br>
+    <button>Post Comment</button>
+  </p>
+  <p><a href = "/topics/{{topic_id}}/edit">Edit this topic</a></p>
 </body>
 </html>
