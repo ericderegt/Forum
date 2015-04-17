@@ -6,6 +6,8 @@ var Mustache = require('mustache');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var marked = require('marked');
+var request = require('request');
 
 var db = new sqlite3.Database('./dbforum.db');
 var app = express();
@@ -18,7 +20,7 @@ app.use(methodOverride('_method'));
 
 // route for homepage - SQL query pulls in topic information from topics table and user information from users table
 app.get('/', function(req, res) {
-  db.all("SELECT topic, votes, username, topic_id FROM topics INNER JOIN users ON topics.user_id = users.user_id;", {}, function(err, posts) {
+  db.all("SELECT topic, votes, username, topic_id, location FROM topics INNER JOIN users ON topics.user_id = users.user_id;", {}, function(err, posts) {
     fs.readFile('./views/index.html', 'utf8', function(error, html) {
       var rendered = Mustache.render(html, {
         allPosts: posts
@@ -126,13 +128,26 @@ app.post('/topics', function(req,res){
 // individual topic page
 app.get('/topics/:topic_id', function(req, res) {
   var topic = req.params.topic_id;
-  db.all("SELECT topic, votes, username, topic_id FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
-    db.all("SELECT comment, topic, username FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
+  db.all("SELECT topic, votes, username, topic_id, location, htmlTopic FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
+    db.all("SELECT comment, topic, username, commentLocation, htmlComment FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
+
+      // var processedComments = [];
+      // commentsInfo.forEach(function(c) {
+      //   c.comment = marked(c.comment);
+      //   processedComments.push(c);
+      // })
+
+      // var processedComments = commentsInfo.map(function(c) {
+      //   c.comment = marked(c.comment);
+      //   return c;
+      // });
+
       fs.readFile('./views/topicPage.html', 'utf8', function(err, html) {
         var rendered = Mustache.render(html, {
           topic: topicInfo[0].topic,
           topicUser: topicInfo[0].username,
           topic_id: topicInfo[0].topic_id,
+          location: topicInfo[0].location,
           upvotes: topicInfo[0].votes,
           comments: commentsInfo
         });
@@ -176,12 +191,22 @@ app.delete('/topics/:topic_id', function(req, res) {
   res.redirect('/');
 });
 
+/////////////////
+// comment routes
+/////////////////
+
 // comment post route
 app.post('/comments', function(req,res){
-  db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
-    var id = users[0].user_id;
-    db.run("INSERT INTO comments (comment, user_id, topic_id) VALUES ('" + req.body.comment + "', " + id + " , " + req.body.topic_id + ");");
-    res.redirect('/topics/' + req.body.topic_id);
+  request('http://ipinfo.io/json', function(error, response, body){
+    var parsed = JSON.parse(body);
+    var location = parsed.city + ", " + parsed.region;
+    db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
+      var id = users[0].user_id;
+      var comment = req.body.comment;
+      var htmlComment = marked(req.body.comment);
+      db.run("INSERT INTO comments (comment, user_id, topic_id, commentLocation, htmlComment) VALUES ('" + comment + "', " + id + " , " + req.body.topic_id + ", '" + location + "', '" + htmlComment + "');");
+      res.redirect('/topics/' + req.body.topic_id);
+    });
   });
 });
 

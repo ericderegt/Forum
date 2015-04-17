@@ -9,14 +9,16 @@
   <h4>topics created by {{username}}</h4>
   <p>
     {{#posts}}
-      {{topic}} / {{votes}}
+      {{topic}} / {{votes}} / {{location}}<br>
     {{/posts}}
   </p>
   <h4>comments created by {{username}}</h4>
   <p>
     {{#comments}}
-      {{comment}} on {{topic}}
+      {{comment}} on {{topic}} from {{commentLocation}}<br>
     {{/comments}}
   </p>
+    <!-- links -->
+  <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
 </body>
 </html>

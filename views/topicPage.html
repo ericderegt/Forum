@@ -6,24 +6,28 @@
 </head>
 <body>
   {{topic}}<br>
-  Posted by {{topicUser}} / {{upvotes}} upvotes<br>
+  Posted by {{topicUser}} ({{location}}) / {{upvotes}} upvotes<br><br>
 <!-- comments loop  -->
+  <b>Comments</b>
   {{#comments}}
-  <p>{{comment}}<br>Posted by {{username}}</p>
+  {{{htmlComment}}} Posted by {{username}} ({{location}})
   {{/comments}}
 <!-- add a comment  -->
   <p>
     <h3>Add a comment</h3>
     <form method = "POST" action = "/comments">
-    <label>
-      <input type = "text" name = "comment"/> Enter comment
-    </label>
-    <label>
-      <input type = "text" name = "username"/> Username
-    </label>
+<!--       <label>
+        <input type = "text" name = "comment"/> Enter comment
+      </label> -->
+      <label>
+        <input type = "text" name = "username"/> Username
+      </label>
+      <br><br>
+      <textarea name = "comment" cols = "60" rows = "10">Enter comment here</textarea>
       <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
-    <br>
-    <button>Post Comment</button>
+      <br>
+      <button>Post Comment</button>
+    </form>
   </p>
   <p><a href = "/topics/{{topic_id}}/edit">Edit this topic</a></p>
   <!-- links -->

@@ -19,14 +19,15 @@
     <button type="submit">Delete</button>
   </form>
   </p>
-  {{#comments}}
   <h3>Edit/Delete Comments<h3>
+  {{#comments}}
   <p>
   <form method = "POST" action = "/comments/{{comment_id}}?_method=PUT">
-    <label>
+<!--     <label>
     <input type = "text" name = "comment" value = "{{comment}}">
     - Posted by {{username}}
-    </label>
+    </label> -->
+    <textarea name = "comment" cols = "60" rows = "10">{{{comment}}}</textarea>
     <button type = "submit">Update</button>
   </form>
   <br>
