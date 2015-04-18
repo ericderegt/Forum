@@ -5,12 +5,12 @@
   <title>{{topic}}</title>
 </head>
 <body>
-  {{topic}}<br>
+  <b>{{topic}}</b><br>
   Posted by {{topicUser}} ({{location}}) / {{upvotes}} upvotes<br><br>
 <!-- comments loop  -->
-  <b>Comments</b>
+  <b>{{count}} Comments</b>
   {{#comments}}
-  {{{htmlComment}}} Posted by {{username}} ({{location}})
+  {{{comment}}} Posted by {{username}} ({{commentLocation}})
   {{/comments}}
 <!-- add a comment  -->
   <p>

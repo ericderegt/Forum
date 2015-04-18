@@ -1,3 +1,8 @@
+//////questions for monday
+// things i should refactor/put into functions or different files
+// how to do sub-comments
+
+
 // variable declaration
 var express = require('express');
 var sqlite3 = require('sqlite3');
@@ -18,9 +23,9 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(methodOverride('_method'));
 
-// route for homepage - SQL query pulls in topic information from topics table and user information from users table
+// route for homepage - SQL query pulls in topic information from topics table, user information from users table and counts total # of comments for each topic
 app.get('/', function(req, res) {
-  db.all("SELECT topic, votes, username, topic_id, location FROM topics INNER JOIN users ON topics.user_id = users.user_id;", {}, function(err, posts) {
+  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by votes DESC;", {}, function(err, posts) {
     fs.readFile('./views/index.html', 'utf8', function(error, html) {
       var rendered = Mustache.render(html, {
         allPosts: posts
@@ -56,7 +61,6 @@ app.get('/users/:user_id', function(req, res) {
   console.log("problem route is being hit")
   var id = req.params.user_id;
 
-  // IS THERE A BETTER WAY TO DO THIS ?!?!!?
   // made three sql queries because i needed to run two objects on my mustache template (userPage.html)
   db.all("SELECT * FROM users WHERE user_id = '" + id + "';", {}, function(err, userInfo) {
     db.all("SELECT * FROM topics WHERE user_id = '" + id + "';", {}, function(err, userTopics) {
@@ -125,33 +129,51 @@ app.post('/topics', function(req,res){
   });
 });
 
+// sort by category
+app.get('/topics', function(req,res){
+  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by " + req.query.sort + " DESC;", {}, function(err, posts) {
+    fs.readFile('./views/index.html', 'utf8', function(error, html) {
+      var rendered = Mustache.render(html, {
+        allPosts: posts
+      });
+      res.send(rendered);
+    });
+  });
+});
+
+// upvote topic
+app.get('/upvote/:topic_id', function(req,res){
+  var topic = req.params.topic_id;
+  db.run("UPDATE topics SET votes = votes + 1 WHERE topic_id = " + topic + ";");
+  res.redirect('/');
+});
+
 // individual topic page
 app.get('/topics/:topic_id', function(req, res) {
   var topic = req.params.topic_id;
-  db.all("SELECT topic, votes, username, topic_id, location, htmlTopic FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
-    db.all("SELECT comment, topic, username, commentLocation, htmlComment FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
 
-      // var processedComments = [];
-      // commentsInfo.forEach(function(c) {
-      //   c.comment = marked(c.comment);
-      //   processedComments.push(c);
-      // })
+  db.all("SELECT topic, votes, username, topic_id, location FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
+    db.all("SELECT comment, topic, username, commentLocation FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
+      db.all("SELECT COUNT(comment) AS commentCount FROM comments WHERE topic_id = " + topic + ";", {}, function(err,comments){
+        counter = comments[0].commentCount;
 
-      // var processedComments = commentsInfo.map(function(c) {
-      //   c.comment = marked(c.comment);
-      //   return c;
-      // });
-
-      fs.readFile('./views/topicPage.html', 'utf8', function(err, html) {
-        var rendered = Mustache.render(html, {
-          topic: topicInfo[0].topic,
-          topicUser: topicInfo[0].username,
-          topic_id: topicInfo[0].topic_id,
-          location: topicInfo[0].location,
-          upvotes: topicInfo[0].votes,
-          comments: commentsInfo
+        var htmlComments = commentsInfo.map(function(e) {
+          e.comment = marked(e.comment);
+          return e;
         });
-        res.send(rendered);
+
+        fs.readFile('./views/topicPage.html', 'utf8', function(err, html) {
+          var rendered = Mustache.render(html, {
+            topic: topicInfo[0].topic,
+            topicUser: topicInfo[0].username,
+            topic_id: topicInfo[0].topic_id,
+            location: topicInfo[0].location,
+            upvotes: topicInfo[0].votes,
+            count: counter,
+            comments: htmlComments
+          });
+          res.send(rendered);
+        });
       });
     });
   });
@@ -160,11 +182,12 @@ app.get('/topics/:topic_id', function(req, res) {
 // edit topic page
 app.get('/topics/:topic_id/edit', function(req,res){
   var topic = req.params.topic_id;
-  db.all("SELECT topic, votes, username, topic_id FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
-    db.all("SELECT comment, topic, username, comment_id FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
+  db.all("SELECT topic, votes, username, topic_id, location FROM topics inner join users on topics.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, topicInfo) {
+    db.all("SELECT comment, topic, username, comment_id, commentLocation FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE topics.topic_id = " + topic + ";", {}, function(err, commentsInfo) {
       fs.readFile('./views/editTopic.html', 'utf8', function(err, html) {
         var rendered = Mustache.render(html, {
           topic: topicInfo[0].topic,
+          location: topicInfo[0].location,
           topicUser: topicInfo[0].username,
           topic_id: topicInfo[0].topic_id,
           comments: commentsInfo
@@ -179,7 +202,7 @@ app.get('/topics/:topic_id/edit', function(req,res){
 app.put('/topics/:topic_id', function(req, res) {
   var id = req.params.topic_id;
   var topicInfo = req.body;
-  db.run("UPDATE topics SET topic = '" + topicInfo.topic + "' WHERE topic_id = " + id + ";");
+  db.run("UPDATE topics SET topic = '" + topicInfo.topic + "', location = '" + topicInfo.location + "' WHERE topic_id = " + id + ";");
   res.redirect('/topics/' + id + '/edit');
 });
 
@@ -203,8 +226,7 @@ app.post('/comments', function(req,res){
     db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
       var id = users[0].user_id;
       var comment = req.body.comment;
-      var htmlComment = marked(req.body.comment);
-      db.run("INSERT INTO comments (comment, user_id, topic_id, commentLocation, htmlComment) VALUES ('" + comment + "', " + id + " , " + req.body.topic_id + ", '" + location + "', '" + htmlComment + "');");
+      db.run("INSERT INTO comments (comment, user_id, topic_id, commentLocation) VALUES ('" + comment + "', " + id + " , " + req.body.topic_id + ", '" + location + "');");
       res.redirect('/topics/' + req.body.topic_id);
     });
   });
@@ -214,7 +236,7 @@ app.post('/comments', function(req,res){
 app.put('/comments/:comment_id', function(req, res) {
   var id = req.params.comment_id;
   var commentInfo = req.body;
-  db.run("UPDATE comments SET comment = '" + commentInfo.comment + "' WHERE comment_id = " + id + ";");
+  db.run("UPDATE comments SET comment = '" + commentInfo.comment + "', commentLocation = '" + commentInfo.location + "' WHERE comment_id = " + id + ";");
   res.redirect('/topics/' + id + '/edit');
 });
 

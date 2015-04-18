@@ -10,8 +10,15 @@
     <a href = "/users/new">Create account</a><br>
     <a href = "/topics/new">New Topic</a>
   </p>
+  <form method = "GET" action = "/topics">
+    <select name = "sort">
+      <option value = "numComments">comments</option>
+      <option value = "votes" selected>upvotes</option>
+    </select>
+    <button>Sort</button>
+  </form>
   {{#allPosts}}
-    <p><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / upvotes - {{votes}}</p>
+    <p><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / {{numComments}} comments / <a href = "/upvote/{{topic_id}}">upvotes</a> - {{votes}}</p>
   {{/allPosts}}
   <!-- links -->
   <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
