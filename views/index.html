@@ -31,9 +31,11 @@
         </select>
         <button>Sort</button>
       </form><br>
+      <ul class="list-group">
       {{#allPosts}}
-        <p><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / {{numComments}} comments / <a href = "/upvote/{{topic_id}}">upvotes</a> - {{votes}}</p>
+        <li><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / {{numComments}} comments / <a href = "/upvote/{{topic_id}}">upvotes</a> - {{votes}}</li>
       {{/allPosts}}
+      </ul>
     </div>
   </div>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>

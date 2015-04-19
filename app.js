@@ -2,6 +2,9 @@
 // things i should refactor/put into functions or different files
 // how to do sub-comments
 // how to deploy on port 80
+// git stash ... having merge issue on DO pull
+// apostrophes and other input errors
+// set up dependencies/package.json
 
 
 // variable declaration
@@ -245,8 +248,8 @@ app.post('/comments', function(req,res){
 app.put('/comments/:comment_id', function(req, res) {
   var id = req.params.comment_id;
   var commentInfo = req.body;
-  db.run("UPDATE comments SET comment = '" + commentInfo.comment + "', commentLocation = '" + commentInfo.location + "' WHERE comment_id = " + id + ";");
-  res.redirect('/topics/' + id + '/edit');
+  db.run("UPDATE comments SET comment = '" + commentInfo.comment + "', commentLocation = '" + commentInfo.commentLocation + "' WHERE comment_id = " + id + ";");
+  res.redirect('/topics/' + req.body.topic_id + '/edit');
 });
 
 // delete comment route

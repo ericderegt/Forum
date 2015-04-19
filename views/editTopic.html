@@ -52,14 +52,14 @@
         <textarea name = "comment" cols = "60" rows = "10">{{{comment}}}</textarea>
         <br>Posted by {{username}}<br>
         <label>
-          <input type = "text" name = "location" value = "{{commentLocation}}">
+          <input type = "text" name = "commentLocation" value = "{{commentLocation}}">
           Location
         </label><br><br>
+        <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
         <button type = "submit">Update</button>
       </form>
       <br>
       <form method="POST" action="/comments/{{comment_id}}?_method=DELETE">
-        <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
         <button type="submit">Delete</button>
       </form>
       {{/comments}}
