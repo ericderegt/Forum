@@ -2,22 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Edit User Information</title>
+  <title>Edit User</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 <body>
-  <p>
-  <h3>Update User Info For {{username}}</h3>
-  <form method = "POST" action = "/users/{{user_id}}?_method=PUT">
-    <input type = "text" name = "username" value = "{{username}}">
-    <input type = "text" name = "email" value = "{{email}}">
-    <input type = "hidden" name = "user_id" value = "{{user_id}}">
-    <button type = "submit">Update</button>
-  </form>
-  </p>
-  <form method="POST" action="/users/{{user_id}}?_method=DELETE">
-    <button type="submit">Delete</button>
-  </form>
-<!-- links -->
-  <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
+  <nav class = "navbar navbar-default">
+    <div class = "container">
+      <h4>Podcast Hunt</h4> <!-- <a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a> -->
+      <ul class="nav nav-pills">
+        <li role="navigation"><a href = "/">Home</a></li>
+        <li role="navigation"><a href = "/users">Users</a></li>
+        <li role="navigation"><a href = "/topics/new">Post Topic</a></li>
+        <li role="navigation"><a href = "/users/new">Create Account</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class = "container">
+    <div class = "row">
+      <p>
+      <h3>Update User Info For {{username}}</h3>
+      <form method = "POST" action = "/users/{{user_id}}?_method=PUT">
+        <input type = "text" name = "username" value = "{{username}}">
+        <input type = "text" name = "email" value = "{{email}}">
+        <input type = "hidden" name = "user_id" value = "{{user_id}}">
+        <button type = "submit">Update</button>
+      </form>
+      </p>
+      <form method="POST" action="/users/{{user_id}}?_method=DELETE">
+        <button type="submit">Delete</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -2,25 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Forum - Home</title>
+  <title>Podcast Hunt</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 <body>
-  <h3>Forum</h3>
-  <p>
-    <a href = "/users/new">Create account</a><br>
-    <a href = "/topics/new">New Topic</a>
-  </p>
-  <form method = "GET" action = "/topics">
-    <select name = "sort">
-      <option value = "numComments">comments</option>
-      <option value = "votes" selected>upvotes</option>
-    </select>
-    <button>Sort</button>
-  </form>
-  {{#allPosts}}
-    <p><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / {{numComments}} comments / <a href = "/upvote/{{topic_id}}">upvotes</a> - {{votes}}</p>
-  {{/allPosts}}
-  <!-- links -->
-  <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
+  <nav class = "navbar navbar-default">
+    <div class = "container">
+      <h4>Podcast Hunt</h4> <!-- <a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a> -->
+      <ul class="nav nav-pills">
+        <li role="navigation" class="active"><a href = "/">Home</a></li>
+        <li role="navigation"><a href = "/users">Users</a></li>
+        <li role="navigation"><a href = "/topics/new">Post Topic</a></li>
+        <li role="navigation"><a href = "/users/new">Create Account</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class = "container">
+    <div class = "row">
+      <form method = "GET" action = "/topics">
+        <select name = "sort">
+          <option value = "numComments">Comments</option>
+          <option value = "votes" selected>Upvotes</option>
+        </select>
+        <button>Sort</button>
+      </form><br>
+      {{#allPosts}}
+        <p><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / {{numComments}} comments / <a href = "/upvote/{{topic_id}}">upvotes</a> - {{votes}}</p>
+      {{/allPosts}}
+    </div>
+  </div>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </body>
 </html>

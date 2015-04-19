@@ -2,24 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Create New User</title>
+  <title>Create Account</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 <body>
-  <h3>Create Account</h3>
-  <p><a href = "/">Home</a></p>
-  <p>Enter a username and email address to create your account</p>
-  <form method = "POST" action = "/users">
-    <label>
-      Username
-      <input type = "text" name = "username"/>
-    </label>
-    <label>
-      Email
-      <input type = "text" name = "email"/>
-    </label> 
-    <button>Create</button>
-  </form>
-  <!-- links -->
-  <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
+  <nav class = "navbar navbar-default">
+    <div class = "container">
+      <h4>Podcast Hunt</h4> <!-- <a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a> -->
+      <ul class="nav nav-pills">
+        <li role="navigation"><a href = "/">Home</a></li>
+        <li role="navigation"><a href = "/users">Users</a></li>
+        <li role="navigation"><a href = "/topics/new">Post Topic</a></li>
+        <li role="navigation" class="active"><a href = "/users/new">Create Account</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class = "container">
+    <div class = "row">
+      <h3>Create Account</h3>
+      <p>Enter a username and email address to create your account</p>
+      <form method = "POST" action = "/users">
+        <label>
+          Username
+          <input type = "text" name = "username"/>
+        </label>
+        <label>
+          Email
+          <input type = "text" name = "email"/>
+        </label> 
+        <button>Create</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </body>
 </html>

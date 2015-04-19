@@ -2,23 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{username}}</title>
+  <title>Podcast Hunt</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 <body>
-  <h3>{{username}}</h3>
-  <h4>topics created by {{username}}</h4>
-  <p>
-    {{#posts}}
-      {{topic}} / {{votes}} / {{location}}<br>
-    {{/posts}}
-  </p>
-  <h4>comments created by {{username}}</h4>
-  <p>
-    {{#comments}}
-      {{comment}} on {{topic}} from {{commentLocation}}<br>
-    {{/comments}}
-  </p>
-    <!-- links -->
-  <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
+  <nav class = "navbar navbar-default">
+    <div class = "container">
+      <h4>Podcast Hunt</h4> <!-- <a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a> -->
+      <ul class="nav nav-pills">
+        <li role="navigation"><a href = "/">Home</a></li>
+        <li role="navigation"><a href = "/users">Users</a></li>
+        <li role="navigation"><a href = "/topics/new">Post Topic</a></li>
+        <li role="navigation"><a href = "/users/new">Create Account</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class = "container">
+    <div class = "row">
+      <h3>{{username}}</h3>
+      <h4>topics created by {{username}}</h4>
+      <p>
+        {{#posts}}
+          {{topic}} / {{votes}} / {{location}}<br>
+        {{/posts}}
+      </p>
+      <h4>comments created by {{username}}</h4>
+      <p>
+        {{#comments}}
+          {{comment}} on {{topic}} from {{commentLocation}}<br>
+        {{/comments}}
+      </p>
+    </div>
+  </div>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(methodOverride('_method'));
+app.use('/static', express.static('views'));
 
 // route for homepage - SQL query pulls in topic information from topics table, user information from users table and counts total # of comments for each topic
 app.get('/', function(req, res) {
@@ -58,13 +59,12 @@ app.get('/users/new', function(req, res) {
 
 // show user's page
 app.get('/users/:user_id', function(req, res) {
-  console.log("problem route is being hit")
   var id = req.params.user_id;
 
   // made three sql queries because i needed to run two objects on my mustache template (userPage.html)
   db.all("SELECT * FROM users WHERE user_id = '" + id + "';", {}, function(err, userInfo) {
     db.all("SELECT * FROM topics WHERE user_id = '" + id + "';", {}, function(err, userTopics) {
-      db.all("SELECT * FROM comments WHERE user_id = '" + id + "';", {}, function(error, userComments) {
+      db.all("SELECT comment, topic, username, commentLocation FROM comments inner join topics on comments.topic_id = topics.topic_id inner join users on comments.user_id = users.user_id WHERE comments.user_id = " + id + ";", {}, function(error, userComments) {
         fs.readFile('./views/userPage.html', 'utf8', function(error, html) {
           var rendered = Mustache.render(html, {
             "username": userInfo[0].username,
@@ -122,10 +122,14 @@ app.get('/topics/new', function(req,res){
 
 // new topic post route
 app.post('/topics', function(req,res){
-  db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
-    var id = users[0].user_id;
-    db.run("INSERT INTO topics (topic, votes, user_id) VALUES ('" + req.body.topic + "', 0, " + id + ");");
-    res.redirect('/');
+  request('http://ipinfo.io/json', function(error, response, body){
+    var parsed = JSON.parse(body);
+    var location = parsed.city + ", " + parsed.region;
+    db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
+      var id = users[0].user_id;
+      db.run("INSERT INTO topics (topic, votes, user_id, location) VALUES ('" + req.body.topic + "', 0, " + id + ", '" + location + "');");
+      res.redirect('/');
+    });
   });
 });
 

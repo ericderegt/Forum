@@ -3,44 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <title>Edit Topic</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 <body>
-  <h3>{{topic}} - Update</h3>
-  <p>
-  <form method = "POST" action = "/topics/{{topic_id}}?_method=PUT">
-    <label>
-    <input type = "text" name = "topic" value = "{{topic}}">
-    - Posted by {{topicUser}}
-    </label><br>
-    <label>
-    <input type = "text" name = "location" value = "{{location}}">
-      Location
-    </label><br><br>
-    <button type = "submit">Update</button>
-  </form>
-  <br>
-  <form method="POST" action="/topics/{{topic_id}}?_method=DELETE">
-    <button type="submit">Delete</button>
-  </form>
-  </p>
-  <h3>Edit/Delete Comments</h3>
-  {{#comments}}
-  <p>
-  <form method = "POST" action = "/comments/{{comment_id}}?_method=PUT">
-    <textarea name = "comment" cols = "60" rows = "10">{{{comment}}}</textarea>
-    <br>Posted by {{username}}<br>
-    <label>
-      <input type = "text" name = "location" value = "{{commentLocation}}">
-      Location
-    </label><br><br>
-    <button type = "submit">Update</button>
-  </form>
-  <form method="POST" action="/comments/{{comment_id}}?_method=DELETE">
-    <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
-    <button type="submit">Delete</button>
-  </form>
-  {{/comments}}
-  <!-- links -->
-  <p><a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a></p>
+  <nav class = "navbar navbar-default">
+    <div class = "container">
+      <h4>Podcast Hunt</h4> <!-- <a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a> -->
+      <ul class="nav nav-pills">
+        <li role="navigation"><a href = "/">Home</a></li>
+        <li role="navigation"><a href = "/users">Users</a></li>
+        <li role="navigation"><a href = "/topics/new">Post Topic</a></li>
+        <li role="navigation"><a href = "/users/new">Create Account</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class = "container">
+    <div class = "row">
+
+      <h4>{{topic}} - Update</h4>
+      <p>
+      <form method = "POST" action = "/topics/{{topic_id}}?_method=PUT">
+        <label>
+        <input type = "text" name = "topic" value = "{{topic}}">
+        - Posted by {{topicUser}}
+        </label><br>
+        <label>
+        <input type = "text" name = "location" value = "{{location}}">
+          Location
+        </label><br><br>
+        <button type = "submit">Update</button>
+      </form>
+      <br>
+      <form method="POST" action="/topics/{{topic_id}}?_method=DELETE">
+        <button type="submit">Delete</button>
+      </form>
+      </p>
+      <h4>Edit/Delete Comments</h4>
+      {{#comments}}
+      <p>
+      <form method = "POST" action = "/comments/{{comment_id}}?_method=PUT">
+        <textarea name = "comment" cols = "60" rows = "10">{{{comment}}}</textarea>
+        <br>Posted by {{username}}<br>
+        <label>
+          <input type = "text" name = "location" value = "{{commentLocation}}">
+          Location
+        </label><br><br>
+        <button type = "submit">Update</button>
+      </form>
+      <br>
+      <form method="POST" action="/comments/{{comment_id}}?_method=DELETE">
+        <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
+        <button type="submit">Delete</button>
+      </form>
+      {{/comments}}
+    </div>
+  </div>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </body>
 </html>
