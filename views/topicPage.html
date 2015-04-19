@@ -24,7 +24,9 @@
   <div class = "container">
     <div class = "row">
       <h4>{{topic}}</h4>
-      Posted by {{topicUser}} ({{location}}) / {{upvotes}} upvotes<br><br>
+      Posted by {{topicUser}} ({{location}}) on {{time}} / {{upvotes}} upvotes<br><br>
+      {{{body}}}
+      <br><br>
     <!-- comments loop  -->
       <h4>{{count}} Comments</h4>
       {{#comments}}
@@ -34,14 +36,12 @@
       <p><br><br>
         <h4>Add a comment</h4>
         <form method = "POST" action = "/comments">
-    <!--       <label>
-            <input type = "text" name = "comment"/> Enter comment
-          </label> -->
           <label>
             <input type = "text" name = "username"/> Username
           </label>
           <br><br>
-          <textarea name = "comment" cols = "60" rows = "10">Enter comment here</textarea>
+          Comment<br>
+          <textarea name = "comment" cols = "60" rows = "10"></textarea>
           <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
           <br>
           <button>Post Comment</button>

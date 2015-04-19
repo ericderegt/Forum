@@ -25,15 +25,16 @@
     <div class = "row">
       <h3>Create a new topic!</h3>
       <form method = "POST" action = '/topics'>
-      <label>
+      <label>Username<br>
         <input type = "text" name = "username"/>
-        Username
       </label><br><br>
       <label>Topic<br>
-        <textarea name = "topic" cols = "60" rows = "10">Enter topic</textarea>
-        <!-- <input type = "text" name = "topic"/> -->
+        <input type = "text" name = "topic"/>
       </label><br><br>
-      <button>Post</button>
+      <label>Body<br>
+        <textarea name = "body" cols = "60" rows = "10"></textarea>
+      </label><br>
+      <br><button>Post</button>
       </form>
     </div>
   </div>
