@@ -224,7 +224,7 @@ app.delete('/topics/:topic_id', function(req, res) {
 
 // comment post route
 app.post('/comments', function(req,res){
-  request('http://ipinfo.io/json', function(error, response, body){
+  request('http://ipinfo.io/' + req.connection.remoteAddress + '/json', function(error, response, body){
     var parsed = JSON.parse(body);
     var location = parsed.city + ", " + parsed.region;
     db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
