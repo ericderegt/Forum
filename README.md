@@ -1,7 +1,7 @@
 ##Podcast Hunt
 *Podcast Hunt is a discussion forum for podcasts. Users can post topics or comment on other topics.*
 
-[Link to Deployed Version of Podcast Hunt](45.55.169.72)
+[Link to Deployed Version of Podcast Hunt](http://45.55.169.72)
 
 [Link to Trello board](https://trello.com/b/EiOsxalM/wdi-project-one)
 
