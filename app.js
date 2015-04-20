@@ -22,7 +22,7 @@ app.use('/static', express.static('views'));
 
 // route for homepage - SQL query pulls in topic information from topics table, user information from users table and counts total # of comments for each topic
 app.get('/', function(req, res) {
-  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by votes DESC;", {}, function(err, posts) {
+  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now','localtime') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by votes DESC;", {}, function(err, posts) {
     var alteredPosts = posts.map(function(e) {
       if (e.seconds > 86400) {
         e.changed = parseInt(e.seconds/86400) + " days ago";
@@ -145,7 +145,7 @@ app.post('/topics', function(req,res){
 
 // sort by category
 app.get('/topics', function(req,res){
-  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by " + req.query.sort + " DESC;", {}, function(err, posts) {
+  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now','localtime') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by " + req.query.sort + " DESC;", {}, function(err, posts) {
     var alteredPosts = posts.map(function(e) {
       if (e.seconds > 86400) {
         e.changed = parseInt(e.seconds/86400) + " days ago";
@@ -242,7 +242,7 @@ app.delete('/topics/:topic_id', function(req, res) {
   res.redirect('/');
 });
 
-// error page
+// topic error page
 app.get('/error', function(req, res) {
     res.send(fs.readFileSync('./views/error.html', 'utf8'));
 });
@@ -257,10 +257,14 @@ app.post('/comments', function(req,res){
     var parsed = JSON.parse(body);
     var location = parsed.city + ", " + parsed.region;
     db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
+      if (users[0] === undefined) {
+        res.redirect('/comerror');
+      } else {
       var id = users[0].user_id;
       var comment = req.body.comment;
       db.run("INSERT INTO comments (comment, user_id, topic_id, commentLocation) VALUES ('" + comment + "', " + id + " , " + req.body.topic_id + ", '" + location + "');");
       res.redirect('/topics/' + req.body.topic_id);
+      };
     });
   });
 });
@@ -278,6 +282,11 @@ app.delete('/comments/:comment_id', function(req, res) {
   var id = req.params.comment_id;
   db.run("DELETE FROM comments WHERE comment_id = " + id + ";");
   res.redirect('/topics/' + req.body.topic_id);
+});
+
+// comment error page
+app.get('/comerror', function(req, res) {
+    res.send(fs.readFileSync('./views/comerror.html', 'utf8'));
 });
 
 
