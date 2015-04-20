@@ -48,7 +48,7 @@
 
 **Instructions for Running on Localhost**
 - download / clone repo
-- in Forum folder, run "npm install ." in command line
+- in Forum folder, run "npm install" in command line
 - create config.js file with the following code (switch 3000 to choose a different port)
 
 ```
