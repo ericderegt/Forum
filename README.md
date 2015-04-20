@@ -50,6 +50,9 @@
 - download / clone repo
 - in Forum folder, run "npm install ." in command line
 - create config.js file with the following code (switch 3000 to choose a different port)
-> var information = {};
-> module.exports = information;
-> information.port = 3000;
+
+```
+var information = {};
+module.exports = information;
+information.port = 3000;
+```
