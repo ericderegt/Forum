@@ -32,3 +32,8 @@ db.run("INSERT INTO comments (comment, user_id, topic_id, commentLocation) VALUE
 
 // left join group by
 // select t.topic_id, count(c.comment_id), username, location, votes from topics t left join comments c on t.topic_id = c.topic_id left join users u on t.user_id = u.user_id group by t.topic_id;
+
+// seconds since a post
+// select strftime('%s','now') - strftime('%s',commentTime) from comments;
+
+// SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by votes DESC;

@@ -22,10 +22,20 @@ app.use('/static', express.static('views'));
 
 // route for homepage - SQL query pulls in topic information from topics table, user information from users table and counts total # of comments for each topic
 app.get('/', function(req, res) {
-  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by votes DESC;", {}, function(err, posts) {
+  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by votes DESC;", {}, function(err, posts) {
+    var alteredPosts = posts.map(function(e) {
+      if (e.seconds > 86400) {
+        e.changed = parseInt(e.seconds/86400) + " days ago";
+        return e;
+      } else {
+        e.changed = parseInt(e.seconds/3600) + " hours ago";
+        return e;
+      };
+    });
+
     fs.readFile('./views/index.html', 'utf8', function(error, html) {
       var rendered = Mustache.render(html, {
-        allPosts: posts
+        allPosts: alteredPosts
       });
       res.send(rendered);
     });
@@ -122,19 +132,33 @@ app.post('/topics', function(req,res){
     var parsed = JSON.parse(body);
     var location = parsed.city + ", " + parsed.region;
     db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
-      var id = users[0].user_id;
-      db.run("INSERT INTO topics (topic, body, votes, user_id, location) VALUES ('" + req.body.topic + "', '" + req.body.body + "', 0, " + id + ", '" + location + "');");
-      res.redirect('/');
+      if (users[0] === undefined) {
+        res.redirect('/error');
+      } else {
+        var id = users[0].user_id;
+        db.run("INSERT INTO topics (topic, body, votes, user_id, location) VALUES ('" + req.body.topic + "', '" + req.body.body + "', 0, " + id + ", '" + location + "');");
+        res.redirect('/');
+      };
     });
   });
 });
 
 // sort by category
 app.get('/topics', function(req,res){
-  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, username, location, votes, topic, time FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by " + req.query.sort + " DESC;", {}, function(err, posts) {
+  db.all("SELECT t.topic_id, COUNT(c.comment_id) as numComments, STRFTIME('%s','now') - STRFTIME('%s',time) as seconds, username, location, votes, topic FROM topics t LEFT JOIN comments c ON t.topic_id = c.topic_id LEFT JOIN users u ON t.user_id = u.user_id group by t.topic_id order by " + req.query.sort + " DESC;", {}, function(err, posts) {
+    var alteredPosts = posts.map(function(e) {
+      if (e.seconds > 86400) {
+        e.changed = parseInt(e.seconds/86400) + " days ago";
+        return e;
+      } else {
+        e.changed = parseInt(e.seconds/3600) + " hours ago";
+        return e;
+      };
+    });
+
     fs.readFile('./views/index.html', 'utf8', function(error, html) {
       var rendered = Mustache.render(html, {
-        allPosts: posts
+        allPosts: alteredPosts
       });
       res.send(rendered);
     });
@@ -216,6 +240,11 @@ app.delete('/topics/:topic_id', function(req, res) {
   db.run("DELETE FROM topics WHERE topic_id = " + id + ";");
   db.run("DELETE FROM comments WHERE topic_id = " + id + ";");
   res.redirect('/');
+});
+
+// error page
+app.get('/error', function(req, res) {
+    res.send(fs.readFileSync('./views/error.html', 'utf8'));
 });
 
 /////////////////

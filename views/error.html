@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Podcast Hunt</title>
+  <title>Error</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
@@ -16,32 +16,28 @@
     <div class = "container">
       <h4>Podcast Hunt</h4> <!-- <a href = "/">Home</a> / <a href = "/users">Users</a> / <a href = "/topics/new">Create Topic</a> / <a href = "/users/new">Create Account</a> -->
       <ul class="nav nav-pills">
-        <li role="navigation" class="active"><a href = "/">Home</a></li>
+        <li role="navigation"><a href = "/">Home</a></li>
         <li role="navigation"><a href = "/users">Users</a></li>
-        <li role="navigation"><a href = "/topics/new">Post Topic</a></li>
+        <li role="navigation" class ="active"><a href = "/topics/new">Post Topic</a></li>
         <li role="navigation"><a href = "/users/new">Create Account</a></li>
       </ul>
     </div>
   </nav>
   <div class = "container">
     <div class = "row">
-      <form method = "GET" action = "/topics">
-        <select name = "sort">
-          <option selected>Select</option>
-          <option value = "numComments">Comments</option>
-          <option value = "votes">Upvotes</option>
-          <option value = "time">Time</option>
-        </select>
-        <button>Sort</button>
-      </form><br>
-
-      <div c
-      <ul class="list-group">
-      {{#allPosts}}
-        <li><a href = "/topics/{{topic_id}}">{{topic}}</a> - posted by {{username}} ({{location}}) / {{changed}} / {{numComments}} comments / {{votes}} upvotes <a href = "/upvote/{{topic_id}}"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></></li>
-      {{/allPosts}}
-      </ul>
-
+      <h3>You entered an invalid username. Click users from the navigation to see list of registered users.</h3>
+      <form method = "POST" action = '/topics'>
+      <label>Username<br>
+        <input type = "text" name = "username"/ required>
+      </label><br><br>
+      <label>Topic<br>
+        <input type = "text" name = "topic"/ required>
+      </label><br><br>
+      <label>Body<br>
+        <textarea name = "body" cols = "60" rows = "10" required></textarea>
+      </label><br>
+      <br><button>Post</button>
+      </form>
     </div>
   </div>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
