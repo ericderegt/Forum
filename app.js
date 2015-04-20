@@ -1,12 +1,3 @@
-//////questions for monday
-// things i should refactor/put into functions or different files
-// how to do sub-comments
-// how to deploy on port 80
-// git stash ... having merge issue on DO pull
-// apostrophes and other input errors
-// set up dependencies/package.json
-
-
 // variable declaration
 var express = require('express');
 var sqlite3 = require('sqlite3');
@@ -17,6 +8,7 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var marked = require('marked');
 var request = require('request');
+var config = require('./config.js');
 
 var db = new sqlite3.Database('./dbforum.db');
 var app = express();
@@ -261,6 +253,6 @@ app.delete('/comments/:comment_id', function(req, res) {
 
 
 // server listening
-app.listen(3000, function() {
+app.listen(config.port, function() {
   console.log('listening');
 });
