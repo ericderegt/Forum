@@ -118,7 +118,7 @@ app.get('/topics/new', function(req,res){
 
 // new topic post route
 app.post('/topics', function(req,res){
-  request('http://ipinfo.io/json', function(error, response, body){
+  request('http://ipinfo.io/' + req.connection.remoteAddress + '/json', function(error, response, body){
     var parsed = JSON.parse(body);
     var location = parsed.city + ", " + parsed.region;
     db.all("SELECT user_id FROM users WHERE username = '" + req.body.username + "';", {}, function(err,users){
