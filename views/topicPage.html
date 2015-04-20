@@ -51,11 +51,11 @@
         <h4>Add a comment</h4>
         <form method = "POST" action = "/comments">
           <label>
-            <input type = "text" name = "username"/> Username
+            <input type = "text" name = "username"/ required> Username
           </label>
           <br><br>
           Comment<br>
-          <textarea name = "comment" cols = "60" rows = "10"></textarea>
+          <textarea name = "comment" cols = "60" rows = "10" required></textarea>
           <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>
           <br>
           <button>Post Comment</button>

@@ -28,15 +28,15 @@
       <p>
       <form method = "POST" action = "/topics/{{topic_id}}?_method=PUT">
         <label>
-        <input type = "text" name = "topic" value = "{{topic}}">
+        <input type = "text" name = "topic" value = "{{topic}}" required>
         - Posted by {{topicUser}}
         </label><br>
         <label>
-        <input type = "text" name = "location" value = "{{location}}">
+        <input type = "text" name = "location" value = "{{location}}" required>
           Location
         </label><br>
         <label>Body<br>
-        <textarea name = "body" cols = "60" rows = "10">{{body}}</textarea>
+        <textarea name = "body" cols = "60" rows = "10" required>{{body}}</textarea>
         </label><br><br>
         <button type = "submit">Update</button>
       </form>
@@ -49,10 +49,10 @@
       {{#comments}}
       <p>
       <form method = "POST" action = "/comments/{{comment_id}}?_method=PUT">
-        <textarea name = "comment" cols = "60" rows = "10">{{{comment}}}</textarea>
+        <textarea name = "comment" cols = "60" rows = "10" required>{{{comment}}}</textarea>
         <br>Posted by {{username}}<br>
         <label>
-          <input type = "text" name = "commentLocation" value = "{{commentLocation}}">
+          <input type = "text" name = "commentLocation" value = "{{commentLocation}}" required>
           Location
         </label><br><br>
         <input type = "hidden" name = "topic_id" value = "{{topic_id}}"/>

@@ -26,13 +26,13 @@
       <h3>Create a new topic!</h3>
       <form method = "POST" action = '/topics'>
       <label>Username<br>
-        <input type = "text" name = "username"/>
+        <input type = "text" name = "username"/ required>
       </label><br><br>
       <label>Topic<br>
-        <input type = "text" name = "topic"/>
+        <input type = "text" name = "topic"/ required>
       </label><br><br>
       <label>Body<br>
-        <textarea name = "body" cols = "60" rows = "10"></textarea>
+        <textarea name = "body" cols = "60" rows = "10" required></textarea>
       </label><br>
       <br><button>Post</button>
       </form>
